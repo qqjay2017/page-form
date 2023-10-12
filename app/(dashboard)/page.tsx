@@ -1,5 +1,11 @@
-import { GetFormStats } from "@/actions/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GetFormStats, GetForms } from "@/actions/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ReactNode, Suspense } from "react";
 import { LuView } from "react-icons/lu";
@@ -8,6 +14,9 @@ import { HiCursorClick } from "react-icons/hi";
 import { TbArrowBounce } from "react-icons/tb";
 import { Separator } from "@/components/ui/separator";
 import CreateFormBtn from "@/components/CreateFormBtn";
+import { Form } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
+import { formatDistance } from "date-fns";
 
 export default function Home() {
   return (
@@ -19,6 +28,13 @@ export default function Home() {
       <h2 className="text-4xl font-bold col-span-2">Your forms</h2>
       <Separator className="my-6" />
       <CreateFormBtn />
+      <Suspense
+        fallback={[1, 2, 3, 4].map((el) => (
+          <FormCardSkeleton key={el} />
+        ))}
+      >
+        <FormCards />
+      </Suspense>
     </div>
   );
 }
@@ -111,6 +127,42 @@ function StatsCard({
           <p className="text-xs text-muted-foreground pt-1">{helperText}</p>
         </div>
       </CardContent>
+    </Card>
+  );
+}
+
+async function FormCards() {
+  const forms = await GetForms();
+  return (
+    <>
+      {forms.map((form) => (
+        <FormCard key={form.id} form={form}></FormCard>
+      ))}
+    </>
+  );
+}
+
+function FormCardSkeleton() {
+  return (
+    <Skeleton className="border-2 border-primary-/20 h-[190px] w-full"></Skeleton>
+  );
+}
+
+function FormCard({ form }: { form: Form }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className=" flex items-center gap-2 justify-between">
+          <span className=" truncate font-bold">{form.name}</span>
+          {form.published && <Badge>Published</Badge>}
+          {!form.published && <Badge variant={"destructive"}>Draft</Badge>}
+        </CardTitle>
+      </CardHeader>
+      <CardDescription>
+        {formatDistance(form.createdAt, new Date(), {
+          addSuffix: true,
+        })}
+      </CardDescription>
     </Card>
   );
 }
