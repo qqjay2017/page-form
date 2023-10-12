@@ -6,6 +6,8 @@ import { LuView } from "react-icons/lu";
 import { FaWpforms } from "react-icons/fa";
 import { HiCursorClick } from "react-icons/hi";
 import { TbArrowBounce } from "react-icons/tb";
+import { Separator } from "@/components/ui/separator";
+import CreateFormBtn from "@/components/CreateFormBtn";
 
 export default function Home() {
   return (
@@ -13,6 +15,10 @@ export default function Home() {
       <Suspense fallback={<StatsCards loading />}>
         <CardStatsWrapper />
       </Suspense>
+      <Separator className="my-6" />
+      <h2 className="text-4xl font-bold col-span-2">Your forms</h2>
+      <Separator className="my-6" />
+      <CreateFormBtn />
     </div>
   );
 }
