@@ -48,7 +48,6 @@ function CreateFormBtn() {
 
       router.push(`/builder/${formId}`);
     } catch (error) {
-      console.log(error, "errorerror");
       toast({
         title: "Error",
         variant: "destructive",
