@@ -29,3 +29,10 @@ init db
 ```
 npx prisma studio
 ```
+
+### dnd
+
+```
+yarn add @dnd-kit/core
+
+```

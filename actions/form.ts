@@ -45,7 +45,7 @@ export async function CreateForm(data: formSchemaType) {
     throw new UserNotFoundErr();
   }
   const { name, description } = data;
-  console.log(description, "description");
+
   const form = await prisma.form.create({
     data: {
       userId: user.id,
@@ -71,6 +71,19 @@ export async function GetForms() {
     },
     orderBy: {
       createdAt: "desc",
+    },
+  });
+}
+
+export async function GetFormById(id: number) {
+  const user = await currentUser();
+  if (!user) {
+    throw new UserNotFoundErr();
+  }
+  return await prisma.form.findUnique({
+    where: {
+      userId: user.id,
+      id,
     },
   });
 }
