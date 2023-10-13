@@ -29,9 +29,11 @@ import {
   FormMessage,
 } from "./ui/form";
 import { formSchema, formSchemaType } from "@/schemas/form";
+import { useRouter } from "next/navigation";
 
 import { CreateForm } from "@/actions/form";
 function CreateFormBtn() {
+  const router = useRouter();
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
   });
@@ -44,6 +46,7 @@ function CreateFormBtn() {
         description: "Form created successfully",
       });
       console.log(formId, "formId");
+      router.push(`/builder/${formId}`);
     } catch (error) {
       console.log(error, "errorerror");
       toast({
