@@ -20,7 +20,7 @@ export type FormElement = {
     icon: React.ElementType;
     label: string;
   };
-
+  //  编辑器视图左边区域展示的元素
   designerComponent: React.FC<{
     elementInstance: FormElementInstance;
   }>;

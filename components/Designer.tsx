@@ -155,6 +155,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
       {topHalf.isOver && (
         <div className="absolute top-0 w-full rounded-md h-[7px] bg-primary rounded-b-none" />
       )}
+      {/* 表单元素展示 */}
       <div
         className={cn(
           "flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none opacity-100",
