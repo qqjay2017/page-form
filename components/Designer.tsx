@@ -13,7 +13,13 @@ import { idGenerator } from "@/lib/idGenerator";
 import { Button } from "./ui/button";
 import { BiSolidTrash } from "react-icons/bi";
 function Designer() {
-  const { elements, setElements, addElement } = useDesigner();
+  const {
+    elements,
+    setElements,
+    addElement,
+    selectedElement,
+    setSelectedElement,
+  } = useDesigner();
 
   const droppable = useDroppable({
     id: "designer-drop-area",
@@ -40,7 +46,14 @@ function Designer() {
   });
   return (
     <div className="flex w-full h-full">
-      <div className="p-4 w-full">
+      <div
+        className="p-4 w-full"
+        onClick={() => {
+          if (selectedElement) {
+            setSelectedElement(null);
+          }
+        }}
+      >
         <div
           ref={droppable.setNodeRef}
           className={cn(

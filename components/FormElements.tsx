@@ -28,7 +28,8 @@ export type FormElement = {
     isInvalid?: boolean;
     defaultValue?: string;
   }>;
-  propertiesComponent: React.FC<{}>;
+  // 右边的属性面板
+  propertiesComponent: React.FC<{ elementInstance: FormElementInstance }>;
 };
 
 export type FormElementInstance = {
