@@ -34,12 +34,15 @@ function Designer() {
         return;
       }
       const isDesignerBtnElement = active.data.current?.isDesignerBtnElement;
+      // 是放在编辑空白区域(不是放在其他元素上面),顺势往下接着
+      const isDroppingOverDesignerDropArea =
+        over.data.current?.isDesignerDropArea;
 
-      if (isDesignerBtnElement) {
+      if (isDesignerBtnElement && isDroppingOverDesignerDropArea) {
         const type = active.data?.current?.type as ElementsType;
         if (type) {
           const newElement = FormElements[type].construct(idGenerator());
-          addElement(0, newElement);
+          addElement(elements.length, newElement);
         }
       }
     },
