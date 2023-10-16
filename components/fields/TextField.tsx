@@ -230,6 +230,7 @@ function PropertiesComponent({
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="helperText"
