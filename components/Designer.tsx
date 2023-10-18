@@ -19,6 +19,7 @@ function Designer() {
     addElement,
     selectedElement,
     setSelectedElement,
+    removeElement
   } = useDesigner();
 
   const droppable = useDroppable({
@@ -30,21 +31,65 @@ function Designer() {
   useDndMonitor({
     onDragEnd(event) {
       const { over, active } = event;
+      console.log(over, elements, "over");
       if (!over || !active) {
         return;
       }
-      const isDesignerBtnElement = active.data.current?.isDesignerBtnElement;
-      // 是放在编辑空白区域(不是放在其他元素上面),顺势往下接着
-      const isDroppingOverDesignerDropArea =
-        over.data.current?.isDesignerDropArea;
-
-      if (isDesignerBtnElement && isDroppingOverDesignerDropArea) {
-        const type = active.data?.current?.type as ElementsType;
-        if (type) {
-          const newElement = FormElements[type].construct(idGenerator());
-          addElement(elements.length, newElement);
-        }
+      const type = active.data?.current?.type as ElementsType;
+      if (!type) {
+        return;
       }
+      const isDesignerBtnElement = active.data.current?.isDesignerBtnElement;
+      const isDroppingOverDesignerDropArea =   over.data.current?.isDesignerDropArea;
+      //情况1: 右边拖到编辑空白区域(不是放在其他元素上面)
+      const droppingSiderbarBtnOverDesignerDropArea =       isDesignerBtnElement && isDroppingOverDesignerDropArea;
+
+      if (droppingSiderbarBtnOverDesignerDropArea) {
+        const newElement = FormElements[type].construct(idGenerator());
+        addElement(elements.length, newElement);
+        return;
+      }
+
+      const isDroppingSiderbarBtnOverDesignerElementTopHarf =  over.data.current?.isTopHalfDesignerElement;
+      const isDroppingSiderbarBtnOverDesignerElementBottomHarf = over.data.current?.isBottomHalfDesignerElement;
+      const isDroppingSiderbarBtnOverDesignerElement =    isDroppingSiderbarBtnOverDesignerElementTopHarf |    isDroppingSiderbarBtnOverDesignerElementBottomHarf;
+      const droppingSiderbarBtnOverDesignerElement = isDesignerBtnElement && isDroppingSiderbarBtnOverDesignerElement;
+      //情况2: 右边拖到其他元素上
+      if (droppingSiderbarBtnOverDesignerElement) {
+        const newElement = FormElements[type].construct(idGenerator());
+        const overId = over.data.current?.elementId;
+        const overElementIndex = elements.findIndex(
+          (element) => element.id == overId
+        );
+        if (overElementIndex === -1) {
+          throw new Error("Elemment not found");
+        }
+        let indexForNewElement = overElementIndex;
+        if (isDroppingSiderbarBtnOverDesignerElementBottomHarf) {
+          indexForNewElement = overElementIndex + 1;
+        }
+        addElement(indexForNewElement, newElement);
+        return;
+      }
+      //情况3 元素拖到其他元素上
+      const isDraggingDesignerElement = active.data?.current?.isDesignerElement;
+      const draggingDesignerElementOverAnotherDesignerElement = isDroppingSiderbarBtnOverDesignerElement && isDraggingDesignerElement;
+      if (draggingDesignerElementOverAnotherDesignerElement) {
+        const activeId = active.data.current?.elementId;
+        const overId = over.data.current?.elementId;
+        const activeElementIndex = elements.findIndex(el => el.id === activeId);
+        const overElementIndex = elements.findIndex(el => el.id === overId);
+        if (activeElementIndex === -1 || overElementIndex === -1) {
+          throw new Error("element not found")
+        }
+        const activeElement = elements[activeElementIndex];
+        removeElement(activeId)
+        let indexForNewElement = overElementIndex;
+        if (isDroppingSiderbarBtnOverDesignerElementBottomHarf) {
+          indexForNewElement = overElementIndex + 1;
+        }
+        addElement(indexForNewElement,activeElement)
+       }
     },
   });
   return (
@@ -61,7 +106,7 @@ function Designer() {
           ref={droppable.setNodeRef}
           className={cn(
             "bg-background max-w-[920px] h-full m-auto rounded-xl flex flex-col flex-grow items-center justify-start flex-1 overflow-y-auto",
-            droppable.isOver && "ring-2 ring-primary/20"
+            droppable.isOver && "ring-2 ring-primary/20 ring-inset"
           )}
         >
           {!droppable.isOver && elements.length === 0 && (
