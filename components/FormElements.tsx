@@ -1,4 +1,5 @@
 import { TextFieldFormElement } from "./fields/TextField";
+export type SubmitFunction = (key: string, value: string) => void;
 
 export type ElementsType = "TextField";
 //   | "TitleField"
@@ -25,11 +26,14 @@ export type FormElement = {
     elementInstance: FormElementInstance;
   }>;
   formComponent: React.FC<{
+    elementInstance: FormElementInstance;
     isInvalid?: boolean;
     defaultValue?: string;
+    submitValue?: SubmitFunction;
   }>;
   // 右边的属性面板
   propertiesComponent: React.FC<{ elementInstance: FormElementInstance }>;
+  validate: (formElement: FormElementInstance, currentValue: string) => boolean;
 };
 
 export type FormElementInstance = {
