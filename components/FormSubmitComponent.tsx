@@ -108,7 +108,7 @@ function FormSubmitComponent({
           {!pending && (
             <>
               <HiCursorClick className="mr-2" />
-              Submit
+              提交
             </>
           )}
           {pending && <ImSpinner2 className="animate-spin" />}

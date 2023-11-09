@@ -65,7 +65,7 @@ function CreateFormBtn() {
         >
           <BsFileEarmarkPlus className="h-8 w-8 text-muted-foreground group-hover:text-primary" />
           <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">
-            Create new form
+            新建
           </p>
         </Button>
       </DialogTrigger>

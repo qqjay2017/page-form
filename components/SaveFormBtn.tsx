@@ -36,7 +36,7 @@ function SaveFormBtn({ id }: { id: number }) {
       }}
     >
       <HiSaveAs className="h-4 w-4" />
-      Save
+      保存
       {loading && <FaSpinner className="animate-spin" />}
     </Button>
   );

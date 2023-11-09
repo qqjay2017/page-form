@@ -29,7 +29,7 @@ export default function Home() {
         <CardStatsWrapper />
       </Suspense>
       <Separator className="my-6" />
-      <h2 className="text-4xl font-bold col-span-2">Your forms</h2>
+      <h2 className="text-4xl font-bold col-span-2">表单列表</h2>
       <Separator className="my-6" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <CreateFormBtn />
@@ -61,7 +61,7 @@ function StatsCards(props: StatsCardsProps) {
     <div className="w-full pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       {[
         {
-          title: "Total visits",
+          title: "浏览总数",
           helperText: "All time form visits",
           value: data?.visits.toLocaleString() || "",
           loading,
@@ -69,7 +69,7 @@ function StatsCards(props: StatsCardsProps) {
           icon: <LuView className="text-blue-600" />,
         },
         {
-          title: "Total submissions",
+          title: "提交总数",
           helperText: "All time form submissions",
           value: data?.submissions.toLocaleString() || "",
           loading,
@@ -77,7 +77,7 @@ function StatsCards(props: StatsCardsProps) {
           icon: <FaWpforms className="text-yellow-600" />,
         },
         {
-          title: "Submission rate",
+          title: "提交占比",
           helperText: "Visits that result in form submission",
           value: data?.submissionRate.toLocaleString() + "%" || "",
           loading,
@@ -85,7 +85,7 @@ function StatsCards(props: StatsCardsProps) {
           icon: <HiCursorClick className="text-green-600" />,
         },
         {
-          title: "Bounce rate",
+          title: "跳出占比",
           helperText: "Visits that result in form interacting",
           value: data?.bounceRate.toLocaleString() + "%" || "",
           loading,
@@ -122,8 +122,8 @@ function FormCard({ form }: { form: Form }) {
       <CardHeader>
         <CardTitle className=" flex items-center gap-2 justify-between">
           <span className=" truncate font-bold">{form.name}</span>
-          {form.published && <Badge>Published</Badge>}
-          {!form.published && <Badge variant={"destructive"}>Draft</Badge>}
+          {form.published && <Badge>已发布</Badge>}
+          {!form.published && <Badge variant={"destructive"}>草稿</Badge>}
         </CardTitle>
       </CardHeader>
       <CardDescription className="px-6 flex items-center justify-between text-muted-foreground text-sm">
@@ -157,7 +157,8 @@ function FormCard({ form }: { form: Form }) {
             className=" w-full mt-2 text-md gap-4"
           >
             <Link href={`/builder/${form.id}`}>
-              Edit form <FaEdit />
+              编辑
+              <FaEdit />
             </Link>
           </Button>
         )}

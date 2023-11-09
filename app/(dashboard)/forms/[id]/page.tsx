@@ -59,7 +59,7 @@ async function FormDetailPage({
       </div>
       <div className="w-full pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 container">
         <StatsCard
-          title="Total visits"
+          title="浏览总数"
           icon={<LuView className="text-blue-600" />}
           helperText="All time form visits"
           value={visits.toLocaleString() || ""}
@@ -68,7 +68,7 @@ async function FormDetailPage({
         />
 
         <StatsCard
-          title="Total submissions"
+          title="提交总数"
           icon={<FaWpforms className="text-yellow-600" />}
           helperText="All time form submissions"
           value={submissions.toLocaleString() || ""}
@@ -77,7 +77,7 @@ async function FormDetailPage({
         />
 
         <StatsCard
-          title="Submission rate"
+          title="提交占比"
           icon={<HiCursorClick className="text-green-600" />}
           helperText="Visits that result in form submission"
           value={submissionRate.toLocaleString() + "%" || ""}
@@ -86,7 +86,7 @@ async function FormDetailPage({
         />
 
         <StatsCard
-          title="Bounce rate"
+          title="跳出占比"
           icon={<TbArrowBounce className="text-red-600" />}
           helperText="Visits that leaves without interacting"
           value={bounceRate.toLocaleString() + "%" || ""}
@@ -154,7 +154,7 @@ async function SubmissionsTable({ id }: { id: number }) {
 
   return (
     <>
-      <h1 className="text-2xl font-bold my-4">Submissions</h1>
+      <h1 className="text-2xl font-bold my-4">提交历史</h1>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

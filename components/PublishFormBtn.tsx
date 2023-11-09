@@ -40,7 +40,7 @@ function PublishFormBtn({ id }: { id: number }) {
       <AlertDialogTrigger asChild>
         <Button className="gap-2 text-white bg-gradient-to-r from-indigo-400 to-cyan-400">
           <MdOutlinePublish className="h-4 w-4" />
-          Publish
+          发布
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -49,11 +49,11 @@ function PublishFormBtn({ id }: { id: number }) {
           <AlertDialogDescription>
             发布后你将不可编辑 <br />
             <br />
-            <span className="font-medium">并且将表单公开</span>
+            {/* <span className="font-medium">并且将表单公开</span> */}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             disabled={loading}
             onClick={(e) => {
@@ -61,7 +61,7 @@ function PublishFormBtn({ id }: { id: number }) {
               startTransition(publishForm);
             }}
           >
-            Proceed {loading && <FaSpinner className="animate-spin" />}
+            确定 {loading && <FaSpinner className="animate-spin" />}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

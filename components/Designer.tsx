@@ -19,7 +19,7 @@ function Designer() {
     addElement,
     selectedElement,
     setSelectedElement,
-    removeElement
+    removeElement,
   } = useDesigner();
 
   const droppable = useDroppable({
@@ -40,9 +40,11 @@ function Designer() {
         return;
       }
       const isDesignerBtnElement = active.data.current?.isDesignerBtnElement;
-      const isDroppingOverDesignerDropArea =   over.data.current?.isDesignerDropArea;
+      const isDroppingOverDesignerDropArea =
+        over.data.current?.isDesignerDropArea;
       //情况1: 右边拖到编辑空白区域(不是放在其他元素上面)
-      const droppingSiderbarBtnOverDesignerDropArea =       isDesignerBtnElement && isDroppingOverDesignerDropArea;
+      const droppingSiderbarBtnOverDesignerDropArea =
+        isDesignerBtnElement && isDroppingOverDesignerDropArea;
 
       if (droppingSiderbarBtnOverDesignerDropArea) {
         const newElement = FormElements[type].construct(idGenerator());
@@ -50,10 +52,15 @@ function Designer() {
         return;
       }
 
-      const isDroppingSiderbarBtnOverDesignerElementTopHarf =  over.data.current?.isTopHalfDesignerElement;
-      const isDroppingSiderbarBtnOverDesignerElementBottomHarf = over.data.current?.isBottomHalfDesignerElement;
-      const isDroppingSiderbarBtnOverDesignerElement =    isDroppingSiderbarBtnOverDesignerElementTopHarf |    isDroppingSiderbarBtnOverDesignerElementBottomHarf;
-      const droppingSiderbarBtnOverDesignerElement = isDesignerBtnElement && isDroppingSiderbarBtnOverDesignerElement;
+      const isDroppingSiderbarBtnOverDesignerElementTopHarf =
+        over.data.current?.isTopHalfDesignerElement;
+      const isDroppingSiderbarBtnOverDesignerElementBottomHarf =
+        over.data.current?.isBottomHalfDesignerElement;
+      const isDroppingSiderbarBtnOverDesignerElement =
+        isDroppingSiderbarBtnOverDesignerElementTopHarf |
+        isDroppingSiderbarBtnOverDesignerElementBottomHarf;
+      const droppingSiderbarBtnOverDesignerElement =
+        isDesignerBtnElement && isDroppingSiderbarBtnOverDesignerElement;
       //情况2: 右边拖到其他元素上
       if (droppingSiderbarBtnOverDesignerElement) {
         const newElement = FormElements[type].construct(idGenerator());
@@ -73,23 +80,26 @@ function Designer() {
       }
       //情况3 元素拖到其他元素上
       const isDraggingDesignerElement = active.data?.current?.isDesignerElement;
-      const draggingDesignerElementOverAnotherDesignerElement = isDroppingSiderbarBtnOverDesignerElement && isDraggingDesignerElement;
+      const draggingDesignerElementOverAnotherDesignerElement =
+        isDroppingSiderbarBtnOverDesignerElement && isDraggingDesignerElement;
       if (draggingDesignerElementOverAnotherDesignerElement) {
         const activeId = active.data.current?.elementId;
         const overId = over.data.current?.elementId;
-        const activeElementIndex = elements.findIndex(el => el.id === activeId);
-        const overElementIndex = elements.findIndex(el => el.id === overId);
+        const activeElementIndex = elements.findIndex(
+          (el) => el.id === activeId
+        );
+        const overElementIndex = elements.findIndex((el) => el.id === overId);
         if (activeElementIndex === -1 || overElementIndex === -1) {
-          throw new Error("element not found")
+          throw new Error("element not found");
         }
         const activeElement = elements[activeElementIndex];
-        removeElement(activeId)
+        removeElement(activeId);
         let indexForNewElement = overElementIndex;
         if (isDroppingSiderbarBtnOverDesignerElementBottomHarf) {
           indexForNewElement = overElementIndex + 1;
         }
-        addElement(indexForNewElement,activeElement)
-       }
+        addElement(indexForNewElement, activeElement);
+      }
     },
   });
   return (
@@ -111,7 +121,7 @@ function Designer() {
         >
           {!droppable.isOver && elements.length === 0 && (
             <p className="text-3xl text-muted-foreground flex flex-grow items-center font-bold">
-              Drop here
+              拖放到此处
             </p>
           )}
           {droppable.isOver && elements.length === 0 && (
