@@ -25,6 +25,7 @@ export type FormElement = {
   designerComponent: React.FC<{
     elementInstance: FormElementInstance;
   }>;
+  // 预览/真实用的元素
   formComponent: React.FC<{
     elementInstance: FormElementInstance;
     isInvalid?: boolean;

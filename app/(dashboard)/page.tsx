@@ -99,44 +99,6 @@ function StatsCards(props: StatsCardsProps) {
   );
 }
 
-function StatsCard({
-  title,
-  icon,
-  helperText,
-  value,
-  loading,
-  className,
-}: {
-  title: string;
-  icon: ReactNode;
-  helperText: string;
-  value: string;
-  loading: boolean;
-  className: string;
-}) {
-  return (
-    <Card className={className}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className=" text0sm font-medium  text-muted-foreground">
-          {title}
-        </CardTitle>
-        {icon}
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">
-          {loading && (
-            <Skeleton>
-              <span className="opacity-0">0</span>
-            </Skeleton>
-          )}
-          {!loading && value}
-          <p className="text-xs text-muted-foreground pt-1">{helperText}</p>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
 async function FormCards() {
   const forms = await GetForms();
   return (
@@ -183,7 +145,7 @@ function FormCard({ form }: { form: Form }) {
       <CardFooter>
         {form.published && (
           <Button asChild className=" w-full mt-2 text-md gap-4">
-            <Link href={`/form/${form.id}`}>
+            <Link href={`/forms/${form.id}`}>
               View submissions <BiRightArrowAlt />
             </Link>
           </Button>
@@ -200,6 +162,44 @@ function FormCard({ form }: { form: Form }) {
           </Button>
         )}
       </CardFooter>
+    </Card>
+  );
+}
+
+export function StatsCard({
+  title,
+  value,
+  icon,
+  helperText,
+  loading,
+  className,
+}: {
+  title: string;
+  value: string;
+  helperText: string;
+  className: string;
+  loading: boolean;
+  icon: ReactNode;
+}) {
+  return (
+    <Card className={className}>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          {title}
+        </CardTitle>
+        {icon}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">
+          {loading && (
+            <Skeleton>
+              <span className="opacity-0">0</span>
+            </Skeleton>
+          )}
+          {!loading && value}
+        </div>
+        <p className="text-xs text-muted-foreground pt-1">{helperText}</p>
+      </CardContent>
     </Card>
   );
 }
