@@ -32,8 +32,8 @@ model Form {
 model FormSubmissions {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  formId    Int
+  form      Form     @relation(fields: [formId], references: [id])
 
-  formId  Int
-  form    Form   @relation(fields: [formId], references: [id])
   content String
 }
