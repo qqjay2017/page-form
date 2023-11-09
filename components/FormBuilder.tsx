@@ -12,9 +12,14 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import {
+  defaultTheme, // 默认主题
+  darkTheme, // 暗色主题
+} from "@ant-design/compatible";
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import useDesigner from "./hooks/useDesigner";
 import { ImSpinner2 } from "react-icons/im";
+import { ConfigProvider } from "antd";
 function FormBuilder({ form }: { form: Form }) {
   const { setElements } = useDesigner();
   const [isReady, setIsReady] = useState(false);
@@ -49,32 +54,34 @@ function FormBuilder({ form }: { form: Form }) {
     );
   }
   return (
-    <DndContext sensors={sensors}>
-      <main className="flex flex-col w-full">
-        <nav className="flex justify-between border-b-2 p-4 gap-3 items-center">
-          <h2 className=" truncate font-medium">
-            <span className=" text-muted-foreground mr-2">Form:</span>
-            {form.name}
-          </h2>
-          <div className=" flex items-center gap-2">
-            <PreviewDialogBtn />
-            {!form.published && (
-              <>
-                <SaveFormBtn id={form.id} />
-                <PublishFormBtn id={form.id} />
-              </>
-            )}
-          </div>
-        </nav>
-        <div
-          className="flex w-full flex-grow items-center justify-center relative overflow-y-auto h-[200px]
+    <ConfigProvider theme={defaultTheme}>
+      <DndContext sensors={sensors}>
+        <main className="flex flex-col w-full">
+          <nav className="flex justify-between border-b-2 p-4 gap-3 items-center">
+            <h2 className=" truncate font-medium">
+              <span className=" text-muted-foreground mr-2">Form:</span>
+              {form.name}
+            </h2>
+            <div className=" flex items-center gap-2">
+              <PreviewDialogBtn />
+              {!form.published && (
+                <>
+                  <SaveFormBtn id={form.id} />
+                  <PublishFormBtn id={form.id} />
+                </>
+              )}
+            </div>
+          </nav>
+          <div
+            className="flex w-full flex-grow items-center justify-center relative overflow-y-auto h-[200px]
        bg-accent bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]"
-        >
-          <Designer />
-        </div>
-      </main>
-      <DragOverlayWrapper />
-    </DndContext>
+          >
+            <Designer />
+          </div>
+        </main>
+        <DragOverlayWrapper />
+      </DndContext>
+    </ConfigProvider>
   );
 }
 
