@@ -17,6 +17,7 @@ function FormElementsSidebar() {
           表单元素
         </p>
         <SidebarBtnElement formElement={FormElements.TextField} />
+        <SidebarBtnElement formElement={FormElements.TitleField} />
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ export const TextFieldFormElement: FormElement = {
   }),
   designerBtnElement: {
     icon: MdTextFields,
-    label: "Text Field",
+    label: "文本输入框",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -142,26 +142,6 @@ function FormComponent({
     </div>
   );
 }
-
-// function FormComponent({
-//   // elementInstance,
-//   submitValue,
-//   isInvalid,
-//   defaultValue,
-// }: {
-//   // elementInstance: FormElementInstance;
-//   submitValue?: SubmitFunction;
-//   isInvalid?: boolean;
-//   defaultValue?: string;
-// }) {
-//
-
-//
-//
-
-//
-
-// }
 
 type PropertiesSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
