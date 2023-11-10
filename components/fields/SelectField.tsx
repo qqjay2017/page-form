@@ -116,15 +116,17 @@ function FormComponent({
   elementInstance,
   submitValue,
   isInvalid,
-  defaultValue,
 }: {
   elementInstance: FormElementInstance;
   submitValue?: SubmitFunction;
   isInvalid?: boolean;
+  defaultValue?: any;
 }) {
   const element = elementInstance as CustomInstance;
 
-  const [value, setValue] = useState(defaultValue || "");
+  const [value, setValue] = useState(
+    element.extraAttributes.defaultValue || ""
+  );
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -139,7 +141,7 @@ function FormComponent({
     options,
     defaultValue: defaultValue2,
   } = element.extraAttributes;
-  console.log(options, "options");
+
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label className={cn(error && "text-red-500")}>
@@ -152,7 +154,7 @@ function FormComponent({
           value: o,
         }))}
         placeholder={placeHolder}
-        defaultValue={defaultValue2 || defaultValue}
+        defaultValue={defaultValue2}
         value={value}
         onChange={(value) => {
           setValue(value);
@@ -201,7 +203,8 @@ function PropertiesComponent({
   }, [element, form]);
 
   function applyChanges(values: propertiesFormSchemaType) {
-    const { label, helperText, placeHolder, required, options } = values;
+    const { label, helperText, placeHolder, required, options, ...rest } =
+      values;
     updateElement(element.id, {
       ...element,
       extraAttributes: {
@@ -210,6 +213,7 @@ function PropertiesComponent({
         placeHolder,
         required,
         options,
+        ...rest,
       },
     });
 

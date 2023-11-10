@@ -34,12 +34,14 @@ const extraAttributes = {
   label: "Checkbox field",
   helperText: "Helper text",
   required: false,
+  defaultValue: false,
 };
 
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
   required: z.boolean().default(false),
+  defaultValue: z.boolean().default(false),
 });
 
 export const CheckboxFieldFormElement: FormElement = {
@@ -112,7 +114,7 @@ function FormComponent({
   const element = elementInstance as CustomInstance;
 
   const [value, setValue] = useState<boolean>(
-    defaultValue === "true" ? true : false
+    String(element.extraAttributes.defaultValue) === "true" ? true : false
   );
   const [error, setError] = useState(false);
 
@@ -120,7 +122,8 @@ function FormComponent({
     setError(isInvalid === true);
   }, [isInvalid]);
 
-  const { label, required, placeHolder, helperText } = element.extraAttributes;
+  const { label, required, placeHolder, helperText, defaultValue } =
+    element.extraAttributes;
   const id = `checkbox-${element.id}`;
   return (
     <div className="flex items-top space-x-2">
