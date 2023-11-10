@@ -26,37 +26,36 @@ import {
 } from "../ui/form";
 import { Switch } from "../ui/switch";
 import { cn } from "@/lib/utils";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "../ui/select";
+
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import { toast } from "../ui/use-toast";
 import { Input, Select } from "antd";
+import {
+  FieldNameFormField,
+  fieldNamePropertiesSchema,
+} from "./base/fieldNameConfig";
 
 const type: ElementsType = "SelectField";
 
 const extraAttributes = {
   label: "Select field",
-  defaultValue: "",
   helperText: "Helper text",
   required: false,
   placeHolder: "Value here...",
   options: [],
+  fieldName: "",
 };
 
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
   required: z.boolean().default(false),
-  defaultValue: z.any(),
+
   placeHolder: z.string().max(50),
   options: z.array(z.string()).default([]),
+  ...fieldNamePropertiesSchema,
 });
 
 export const SelectFieldFormElement: FormElement = {
@@ -116,6 +115,7 @@ function FormComponent({
   elementInstance,
   submitValue,
   isInvalid,
+  defaultValue,
 }: {
   elementInstance: FormElementInstance;
   submitValue?: SubmitFunction;
@@ -124,23 +124,15 @@ function FormComponent({
 }) {
   const element = elementInstance as CustomInstance;
 
-  const [value, setValue] = useState(
-    element.extraAttributes.defaultValue || ""
-  );
+  const [value, setValue] = useState(defaultValue || "");
   const [error, setError] = useState(false);
 
   useEffect(() => {
     setError(isInvalid === true);
   }, [isInvalid]);
 
-  const {
-    label,
-    required,
-    placeHolder,
-    helperText,
-    options,
-    defaultValue: defaultValue2,
-  } = element.extraAttributes;
+  const { label, required, placeHolder, helperText, options } =
+    element.extraAttributes;
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -149,12 +141,12 @@ function FormComponent({
         {required && "*"}
       </Label>
       <Select
+        defaultValue={defaultValue}
         options={options.map((o) => ({
           label: o,
           value: o,
         }))}
         placeholder={placeHolder}
-        defaultValue={defaultValue2}
         value={value}
         onChange={(value) => {
           setValue(value);
@@ -185,16 +177,19 @@ function PropertiesComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
+  console.log(element.extraAttributes, "element.extraAttributes");
   const { updateElement, setSelectedElement } = useDesigner();
   const form = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onSubmit",
     defaultValues: {
+      ...element.extraAttributes,
       label: element.extraAttributes.label,
       helperText: element.extraAttributes.helperText,
       required: element.extraAttributes.required,
       placeHolder: element.extraAttributes.placeHolder,
       options: element.extraAttributes.options,
+      fieldName: element.extraAttributes.fieldName,
     },
   });
 
@@ -205,6 +200,7 @@ function PropertiesComponent({
   function applyChanges(values: propertiesFormSchemaType) {
     const { label, helperText, placeHolder, required, options, ...rest } =
       values;
+    console.log(values, "SelectField applyChanges values");
     updateElement(element.id, {
       ...element,
       extraAttributes: {
@@ -228,6 +224,7 @@ function PropertiesComponent({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(applyChanges)} className="space-y-3">
+        <FieldNameFormField form={form} />
         <FormField
           control={form.control}
           name="label"
@@ -292,25 +289,7 @@ function PropertiesComponent({
           )}
         />
         <Separator />
-        <FormField
-          control={form.control}
-          name="defaultValue"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>默认值</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur();
-                  }}
-                />
-              </FormControl>
-              <FormDescription>默认值</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <Separator />
         <FormField
           control={form.control}

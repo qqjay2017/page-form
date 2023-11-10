@@ -25,6 +25,10 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Switch } from "../ui/switch";
+import {
+  FieldNameFormField,
+  fieldNamePropertiesSchema,
+} from "./base/fieldNameConfig";
 const type: ElementsType = "TextField";
 const extraAttributes = {
   label: "Text field",
@@ -35,9 +39,11 @@ const extraAttributes = {
 
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
+
   helperText: z.string().max(200),
   required: z.boolean().default(false),
   placeHolder: z.string().max(50),
+  ...fieldNamePropertiesSchema,
 });
 
 export const TextFieldFormElement: FormElement = {
@@ -151,7 +157,9 @@ function PropertiesComponent({
 }) {
   const { updateElement } = useDesigner();
   const element = elementInstance as CustomInstance;
-  const { label, required, placeHolder, helperText } = element.extraAttributes;
+
+  const { label, required, placeHolder, helperText, fieldName, ...rest } =
+    element.extraAttributes;
   const form = useForm({
     resolver: zodResolver(propertiesSchema),
     mode: "onBlur",
@@ -160,6 +168,8 @@ function PropertiesComponent({
       helperText,
       required,
       placeHolder,
+      fieldName,
+      ...rest,
     },
   });
 
@@ -168,7 +178,7 @@ function PropertiesComponent({
   }, [element, form]);
 
   function applyChanges(values: PropertiesSchemaType) {
-    const { label, required, placeHolder, helperText } = values;
+    const { label, required, placeHolder, helperText, ...rest } = values;
     updateElement(element.id, {
       ...element,
       extraAttributes: {
@@ -176,6 +186,7 @@ function PropertiesComponent({
         helperText: helperText,
         required: required,
         placeHolder: placeHolder,
+        ...rest,
       },
     });
   }
@@ -188,6 +199,7 @@ function PropertiesComponent({
         }}
         className="space-y-3"
       >
+        <FieldNameFormField form={form} />
         <FormField
           control={form.control}
           name="label"
