@@ -1,20 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
   SubmitFunction,
 } from "../FormElements";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
-import { IoMdCheckbox } from "react-icons/io";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
+import { cn } from "@/lib/utils";
+import { Bs123 } from "react-icons/bs";
 import {
   Form,
   FormControl,
@@ -25,24 +26,25 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Switch } from "../ui/switch";
-import { cn } from "@/lib/utils";
-import { Checkbox } from "../ui/checkbox";
+import { InputNumber } from "antd";
 
-const type: ElementsType = "CheckboxField";
+const type: ElementsType = "NumberField";
 
 const extraAttributes = {
-  label: "Checkbox field",
+  label: "Number field",
   helperText: "Helper text",
   required: false,
+  placeHolder: "0",
 };
 
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
   required: z.boolean().default(false),
+  placeHolder: z.string().max(50),
 });
 
-export const CheckboxFieldFormElement: FormElement = {
+export const NumberFieldFormElement: FormElement = {
   type,
   construct: (id: string) => ({
     id,
@@ -50,8 +52,8 @@ export const CheckboxFieldFormElement: FormElement = {
     extraAttributes,
   }),
   designerBtnElement: {
-    icon: IoMdCheckbox,
-    label: "CheckBox Field",
+    icon: Bs123,
+    label: "数字输入框",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -63,7 +65,7 @@ export const CheckboxFieldFormElement: FormElement = {
   ): boolean => {
     const element = formElement as CustomInstance;
     if (element.extraAttributes.required) {
-      return currentValue === "true";
+      return currentValue.length > 0;
     }
 
     return true;
@@ -80,20 +82,18 @@ function DesignerComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, required, helperText } = element.extraAttributes;
-  const id = `checkbox-${element.id}`;
+  const { label, required, placeHolder, helperText } = element.extraAttributes;
   return (
-    <div className="flex items-top space-x-2">
-      <Checkbox id={id} />
-      <div className="grid gap-1.5 leading-none">
-        <Label htmlFor={id}>
-          {label}
-          {required && "*"}
-        </Label>
-        {helperText && (
-          <p className="text-muted-foreground text-[0.8rem]">{helperText}</p>
-        )}
-      </div>
+    <div className="flex flex-col gap-2 w-full">
+      <Label>
+        {label}
+        {required && "*"}
+      </Label>
+      <InputNumber readOnly disabled placeholder={placeHolder} />
+
+      {helperText && (
+        <p className="text-muted-foreground text-[0.8rem]">{helperText}</p>
+      )}
     </div>
   );
 }
@@ -111,9 +111,7 @@ function FormComponent({
 }) {
   const element = elementInstance as CustomInstance;
 
-  const [value, setValue] = useState<boolean>(
-    defaultValue === "true" ? true : false
-  );
+  const [value, setValue] = useState(defaultValue || "");
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -121,41 +119,35 @@ function FormComponent({
   }, [isInvalid]);
 
   const { label, required, placeHolder, helperText } = element.extraAttributes;
-  const id = `checkbox-${element.id}`;
   return (
-    <div className="flex items-top space-x-2">
-      <Checkbox
-        id={id}
-        checked={value}
+    <div className="flex flex-col gap-2 w-full">
+      <Label className={cn(error && "text-red-500")}>
+        {label}
+        {required && "*"}
+      </Label>
+      <InputNumber
         className={cn(error && "border-red-500")}
-        onCheckedChange={(checked) => {
-          let value = false;
-          if (checked === true) value = true;
-
-          setValue(value);
+        placeholder={placeHolder}
+        onChange={(e) => setValue(e || "0")}
+        onBlur={(e) => {
           if (!submitValue) return;
-          const stringValue = value ? "true" : "false";
-          const valid = CheckboxFieldFormElement.validate(element, stringValue);
+          const valid = NumberFieldFormElement.validate(element, value);
           setError(!valid);
-          submitValue(element.id, stringValue);
+          if (!valid) return;
+          submitValue(element.id, value);
         }}
+        value={value}
       />
-      <div className="grid gap-1.5 leading-none">
-        <Label htmlFor={id} className={cn(error && "text-red-500")}>
-          {label}
-          {required && "*"}
-        </Label>
-        {helperText && (
-          <p
-            className={cn(
-              "text-muted-foreground text-[0.8rem]",
-              error && "text-red-500"
-            )}
-          >
-            {helperText}
-          </p>
-        )}
-      </div>
+      {helperText && (
+        <p
+          className={cn(
+            "text-muted-foreground text-[0.8rem]",
+            error && "text-red-500"
+          )}
+        >
+          {helperText}
+        </p>
+      )}
     </div>
   );
 }
@@ -175,6 +167,7 @@ function PropertiesComponent({
       label: element.extraAttributes.label,
       helperText: element.extraAttributes.helperText,
       required: element.extraAttributes.required,
+      placeHolder: element.extraAttributes.placeHolder,
     },
   });
 
@@ -183,12 +176,13 @@ function PropertiesComponent({
   }, [element, form]);
 
   function applyChanges(values: propertiesFormSchemaType) {
-    const { label, helperText, required } = values;
+    const { label, helperText, placeHolder, required } = values;
     updateElement(element.id, {
       ...element,
       extraAttributes: {
         label,
         helperText,
+        placeHolder,
         required,
       },
     });
@@ -221,6 +215,25 @@ function PropertiesComponent({
                 The label of the field. <br /> It will be displayed above the
                 field
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="placeHolder"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>PlaceHolder</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.currentTarget.blur();
+                  }}
+                />
+              </FormControl>
+              <FormDescription>The placeholder of the field.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

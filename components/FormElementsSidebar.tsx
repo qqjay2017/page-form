@@ -18,7 +18,10 @@ function FormElementsSidebar() {
           表单元素
         </p>
         <SidebarBtnElement formElement={FormElements.TextField} />
+        <SidebarBtnElement formElement={FormElements.NumberField} />
         <SidebarBtnElement formElement={FormElements.CheckboxField} />
+        <SidebarBtnElement formElement={FormElements.DateField} />
+        <SidebarBtnElement formElement={FormElements.SelectField} />
       </div>
     </div>
   );
