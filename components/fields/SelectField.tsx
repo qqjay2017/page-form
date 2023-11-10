@@ -36,6 +36,7 @@ import {
   FieldNameFormField,
   fieldNamePropertiesSchema,
 } from "./base/fieldNameConfig";
+import { LabelFormField, labelPropertiesSchema } from "./base/labelConfig";
 
 const type: ElementsType = "SelectField";
 
@@ -49,12 +50,12 @@ const extraAttributes = {
 };
 
 const propertiesSchema = z.object({
-  label: z.string().min(2).max(50),
   helperText: z.string().max(200),
   required: z.boolean().default(false),
 
   placeHolder: z.string().max(50),
   options: z.array(z.string()).default([]),
+  ...labelPropertiesSchema,
   ...fieldNamePropertiesSchema,
 });
 
@@ -225,28 +226,7 @@ function PropertiesComponent({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(applyChanges)} className="space-y-3">
         <FieldNameFormField form={form} />
-        <FormField
-          control={form.control}
-          name="label"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Label</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur();
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                The label of the field. <br /> It will be displayed above the
-                field
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <LabelFormField form={form} />
         <FormField
           control={form.control}
           name="placeHolder"
