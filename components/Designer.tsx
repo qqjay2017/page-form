@@ -216,7 +216,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
           </div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse">
             <p className="text-muted-foreground text-sm">
-              Click for properties or drag to move
+              点击修改属性,拖动切换位置
             </p>
           </div>
         </>

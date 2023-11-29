@@ -1,3 +1,4 @@
+import { UseFormReturn } from "react-hook-form";
 import React from "react";
 
 import { z } from "zod";
@@ -10,15 +11,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "antd";
-import { UseFormReturn } from "react-hook-form";
-import { LabelTooltip } from "./LabelTooltip";
 import { WeightEditTitle } from "./WeightEditTitle";
 
-export const labelPropertiesSchema = {
-  label: z.string().min(0).max(50),
-};
-
-export const LabelFormField = ({
+export const HelpTextField = ({
   form,
 }: {
   form: UseFormReturn<any, any, any>;
@@ -26,13 +21,13 @@ export const LabelFormField = ({
   return (
     <FormField
       control={form.control}
-      name="label"
+      name="helperText"
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="flex items-center">
+          <FormLabel>
             <WeightEditTitle
-              title={"标题"}
-              tooltip="标题用于告诉填写者应该在该字段中输入什么样的内容。通常是一个词语或词组，也可以是一个问题。"
+              title={"提示"}
+              tooltip="提示属性用于指定对该模块进行一些附加说明，一般用来指导填写者输入。"
             />
           </FormLabel>
           <FormControl>
@@ -43,10 +38,13 @@ export const LabelFormField = ({
               }}
             />
           </FormControl>
-
           <FormMessage />
         </FormItem>
       )}
     />
   );
+};
+
+export const helpPropertiesSchema = {
+  helperText: z.string().max(200).default(""),
 };

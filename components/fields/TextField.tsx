@@ -15,35 +15,25 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useDesigner from "../hooks/useDesigner";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Switch } from "../ui/switch";
-import {
-  FieldNameFormField,
-  fieldNamePropertiesSchema,
-} from "./base/fieldNameConfig";
+import { Form } from "../ui/form";
+
 import { LabelFormField, labelPropertiesSchema } from "./base/labelConfig";
+import { HelpTextField, helpPropertiesSchema } from "./base/helperTextConfig";
+import { RequiredField, requiredPropertiesSchema } from "./base/RequiredConfig";
+import { DesignComponentCommonLabel } from "./base/DesignComponentCommonLabel";
 const type: ElementsType = "TextField";
 const extraAttributes = {
-  label: "Text field",
-  helperText: "Helper text",
+  label: "单行文字",
+  helperText: "",
   required: false,
-  placeHolder: "Value here...",
+  placeHolder: "请输入内容",
 };
 
 const propertiesSchema = z.object({
-  helperText: z.string().max(200),
-  required: z.boolean().default(false),
   placeHolder: z.string().max(50),
   ...labelPropertiesSchema,
-  ...fieldNamePropertiesSchema,
+  ...helpPropertiesSchema,
+  ...requiredPropertiesSchema,
 });
 
 export const TextFieldFormElement: FormElement = {
@@ -55,7 +45,8 @@ export const TextFieldFormElement: FormElement = {
   }),
   designerBtnElement: {
     icon: MdTextFields,
-    label: "文本输入框",
+    label: "单行文字",
+    description: "单行文本输入框，需要填写者在输入框内根据标题填写相应的内容。",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -83,16 +74,14 @@ function DesignerComponent({
 }) {
   const element = elementInstance as CustomInstance;
   const { label, required, placeHolder, helperText } = element.extraAttributes;
+  console.log(helperText, "helperText");
   return (
     <div className="flex flex-col gap-2 w-full">
-      <Label>
-        {label}
-        {required && "*"}
-      </Label>
-      <Input readOnly disabled placeholder={placeHolder} />
+      <DesignComponentCommonLabel label={label} required={required} />
       {helperText && (
         <p className="text-muted-foreground text-[0.8rem]">{helperText}</p>
       )}
+      <Input readOnly disabled placeholder={placeHolder} />
     </div>
   );
 }
@@ -118,10 +107,11 @@ function FormComponent({
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <Label className={cn(error && "text-red-500")}>
-        {label}
-        {required && "*"}
-      </Label>
+      <DesignComponentCommonLabel
+        label={label}
+        error={error}
+        required={required}
+      />
       <Input
         className={cn(error && "border-red-500")}
         placeholder={placeHolder}
@@ -178,6 +168,7 @@ function PropertiesComponent({
   }, [element, form]);
 
   function applyChanges(values: PropertiesSchemaType) {
+    console.log(values, "values values");
     const { label, required, placeHolder, helperText, ...rest } = values;
     updateElement(element.id, {
       ...element,
@@ -199,9 +190,10 @@ function PropertiesComponent({
         }}
         className="space-y-3"
       >
-        <FieldNameFormField form={form} />
+        {/* <FieldNameFormField form={form} /> */}
         <LabelFormField form={form} />
-        <FormField
+        <HelpTextField form={form} />
+        {/* <FormField
           control={form.control}
           name="placeHolder"
           render={({ field }) => (
@@ -219,52 +211,9 @@ function PropertiesComponent({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
-        <FormField
-          control={form.control}
-          name="helperText"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Helper text</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur();
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                The helper text of the field. <br />
-                It will be displayed below the field.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="required"
-          render={({ field }) => (
-            <FormItem className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
-              <div className="space-y-0.5">
-                <FormLabel>Required</FormLabel>
-                <FormDescription>
-                  The helper text of the field. <br />
-                  It will be displayed below the field.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <RequiredField form={form} />
       </form>
     </Form>
   );

@@ -41,6 +41,9 @@ export default function DesignerContextProvider({
   };
 
   const removeElement = (id: string) => {
+    if (id == selectedElement?.id) {
+      setSelectedElement(null);
+    }
     setElements((prev) => prev.filter((element) => element.id !== id));
   };
 

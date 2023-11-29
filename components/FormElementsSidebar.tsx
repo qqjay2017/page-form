@@ -15,7 +15,7 @@ function FormElementsSidebar() {
         <SidebarBtnElement formElement={FormElements.TitleField} />
 
         <p className="text-sm text-muted-foreground col-span-1 md:col-span-2 my-2 place-self-start">
-          表单元素
+          基础字段
         </p>
         <SidebarBtnElement formElement={FormElements.TextField} />
         <SidebarBtnElement formElement={FormElements.NumberField} />

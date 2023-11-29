@@ -26,6 +26,7 @@ export type FormElement = {
   designerBtnElement: {
     icon: React.ElementType;
     label: string;
+    description?: string;
   };
   //  编辑器视图左边区域展示的元素
   designerComponent: React.FC<{
